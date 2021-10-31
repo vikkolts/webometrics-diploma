@@ -1,0 +1,50 @@
+{
+    "dataSource": {
+        "type": "api",
+        "url": "http://localhost:9500",
+        "index": "univ-by-years"
+    },
+    "slice": {
+        "rows": [
+            {
+                "uniqueName": "Рік"
+            }
+        ],
+        "columns": [
+            {
+                "uniqueName": "[Measures]"
+            }
+        ],
+        "measures": [
+            {
+                "uniqueName": "Всього заяв",
+                "aggregation": "sum"
+            },
+            {
+                "uniqueName": "Сер. бал",
+                "aggregation": "average",
+                "format": "-j86b8p6gkti00"
+            }
+        ]
+    },
+    "options": {
+        "viewType": "charts",
+        "chart": {
+            "type": "line",
+            "showDataLabels": true,
+            "activeMeasure": {
+                "uniqueName": "Сер. бал",
+                "aggregation": "average"
+            }
+        },
+        "configuratorButton": false
+    },
+    "formats": [
+        {
+            "name": "-j86b8p6gkti00",
+            "decimalPlaces": 3
+        }
+    ],
+    "version": "2.9.10",
+    "creationDate": "2021-10-31T19:16:58.191Z"
+}

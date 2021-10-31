@@ -1,0 +1,53 @@
+{
+    "dataSource": {
+        "type": "api",
+        "url": "http://localhost:9500",
+        "index": "univ-by-years"
+    },
+    "slice": {
+        "reportFilters": [
+            {
+                "uniqueName": "ЗВО",
+                "filter": {
+                    "members": [
+                        "зво.[нац. універ. біоресурсів і природокористування україни]"
+                    ]
+                }
+            }
+        ],
+        "rows": [
+            {
+                "uniqueName": "Рік"
+            }
+        ],
+        "columns": [
+            {
+                "uniqueName": "[Measures]"
+            }
+        ],
+        "measures": [
+            {
+                "uniqueName": "Всього заяв",
+                "aggregation": "sum"
+            },
+            {
+                "uniqueName": "Сер. бал",
+                "aggregation": "average"
+            }
+        ]
+    },
+    "options": {
+        "viewType": "charts",
+        "chart": {
+            "type": "column_line",
+            "showDataLabels": true,
+            "activeMeasure": {
+                "uniqueName": "Сер. бал",
+                "aggregation": "average"
+            }
+        },
+        "configuratorButton": false
+    },
+    "version": "2.9.10",
+    "creationDate": "2021-10-31T16:24:47.200Z"
+}

@@ -1,8 +1,4 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
   <router-view/>
 </template>
 
@@ -13,18 +9,46 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
-#nav {
-  padding: 30px;
+html, body{
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+.d-flex{
+  display: flex;
+}
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.flex-wrap{
+  flex-wrap: wrap;
+}
+
+.w-100{
+  width: 100%
+}
+.gap-1{
+  gap: 0.5rem;
+}
+.gap-2{
+  gap: 1rem;
+}
+.gap-3{
+  gap: 1.5rem;
+}
+.p-3{
+  padding: 1.5rem;
+}
+
+.mb-2{
+  margin-bottom: 1rem;
+}
+.mx-auto{
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
