@@ -138,11 +138,8 @@ export default {
 @import "~flexmonster/flexmonster.min.css";
 </style>
 
-// <style lang="scss">
+<style lang="scss">
 #fm-pivot-view .fm-branding-bar{
   display: none;
 }
-// #fm-pivot-view > div.fm-ui-element.fm-ui.fm-noselect{
-//   z-index: 0 !important
-// }
-// </style>
+</style>

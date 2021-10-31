@@ -51,10 +51,59 @@ FROM DataAvgStd
 ORDER BY "Сер. всього заяв" desc
 )b`;
 
-app.get('/test', (req, res) => {  
+const univByYears = `WITH IntermediateResults AS (
+  SELECT UniversityDim.Name AS "ЗВО"
+      ,All_Applications_Entrants AS "Всього заяв"
+      ,Admitted_To_Competition AS "Допущено"
+      ,Recommended_Entrants AS "Рекомендовано"
+      ,Min_Mark AS "Мін. бал"
+      ,Avarage_Mark AS "Сер. бал"
+      ,Rank_Ukraine AS "Рейтинг Україна"
+      ,Rank_World AS "Рейтинг світ"
+      ,Metric_Value AS "Метрика"
+      ,DateDim.Year AS "Рік"
+      ,AVG(All_Applications_Entrants) OVER(PARTITION BY UniversityDim.Name) AS "AVG_ent"
+  FROM UniversityFact
+  JOIN DateDim ON DateDim.ID_Date = UniversityFact.ID_Date
+  JOIN UniversityDim ON UniversityFact.ID_University = UniversityDim.ID_University
+  WHERE ID_Metric=0)
+  SELECT * FROM IntermediateResults AS n WHERE n."AVG_ent" > 350
+  ORDER BY n."AVG_ent" DESC, n."Рік" ASC`;
+
+const correlationZVOs = `WITH DataAvgStd
+AS (SELECT ЗВО,
+           STDEV([Всього заяв]) over(partition by ЗВО) AS XStdev,
+           STDEV(Метрика) over(partition by ЗВО) AS YSTDev,
+           COUNT(*) over(partition by ЗВО) AS SampleSize,
+   AVG([Всього заяв]) OVER(PARTITION BY "ЗВО") AS "Сер. всього заяв",
+   AVG("Метрика") OVER(PARTITION BY "ЗВО") AS "Сер. метрика",
+           ( [Всього заяв] - AVG([Всього заяв]) over(partition by ЗВО)) * ( Метрика - AVG(Метрика) over(partition by ЗВО)) AS ExpectedValue
+    FROM  (
+ SELECT UniversityDim.Name AS "ЗВО"
+     ,All_Applications_Entrants AS "Всього заяв"
+     ,Admitted_To_Competition AS "Допущено"
+     ,Recommended_Entrants AS "Рекомендовано"
+     ,Min_Mark AS "Мін. бал"
+     ,Avarage_Mark AS "Сер. бал"
+     ,Rank_Ukraine AS "Рейтинг Україна"
+     ,Rank_World AS "Рейтинг світ"
+     ,Metric_Value AS "Метрика"
+     ,DateDim.Year AS "Рік"
+ FROM UniversityFact
+ JOIN DateDim ON DateDim.ID_Date = UniversityFact.ID_Date
+ JOIN UniversityDim ON UniversityFact.ID_University = UniversityDim.ID_University
+ WHERE ID_Metric=0
+)a)
+SELECT DISTINCT TOP 21 ЗВО,
+"Сер. всього заяв",
+"Сер. метрика",
+  SUM(ExpectedValue) over(partition by ЗВО) / (SampleSize - 1 ) / ( XStdev * YSTDev ) AS "Кореляція"
+FROM DataAvgStd
+ORDER BY "Сер. всього заяв" desc`;
+
+app.get('/avg-correlation', (req, res) => {  
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
-  //res.setHeader('Content-Type', 'text/plain');
   sql.connect(conn, function (err) {
     if (err) console.log(err);
     // create Request object
@@ -67,10 +116,36 @@ app.get('/test', (req, res) => {
         res.send([temp]);
     });
   });
-})
+});
+
+app.get('/univ-correlations', (req, res) => {  
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+  sql.connect(conn, function (err) {
+    if (err) console.log(err);
+    var request = new sql.Request();
+    request.query(correlationZVOs, function (err, recordset) {
+        if (err) console.log(err)
+        res.send(recordset.recordset);
+    });
+  });
+});
+
+app.get('/univ-stats', (req, res) => {  
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+  sql.connect(conn, function (err) {
+    if (err) console.log(err);
+    var request = new sql.Request();
+    request.query(univByYears, function (err, recordset) {
+        if (err) console.log(err)
+        res.send(recordset.recordset);
+    });
+  });
+});
 
 app.get('/', (req, res) => {
-  res.send('/test to get general correlation')
+  res.send("[GET] /univ-correlations to get all correlations by universities. [GET] /avg-correlation to get general correlation. [GET] /univ-stats to get universities stats. ")
 })
 
 app.listen(port, () => {

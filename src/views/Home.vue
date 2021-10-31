@@ -18,14 +18,16 @@
       <label for="radio-4">КПЕ</label>
     </div> -->
   </div>
-  <template v-if="selectedMode === '1'">
-    <Dashboard/>
-  </template>
-  <template v-else-if="selectedMode === '2'">
-    <UnivStats/>
-  </template>
-  <template v-else-if="selectedMode === '3'">
-    <Correlation/>
+  <template v-if="univData && univData.length > 0">
+    <template v-if="selectedMode === '1'">
+      <Dashboard :univData="univData"/>
+    </template>
+    <template v-else-if="selectedMode === '2'">
+      <UnivStats :univData="univData"/>
+    </template>
+    <template v-else-if="selectedMode === '3' && correlationData && correlationData.length > 0">
+      <Correlation :correlationData="correlationData" :avgCorrelation="avgCorrelation"/>
+    </template>
   </template>
 </template>
 
@@ -40,9 +42,24 @@ export default {
   data(){
     return{
       selectedMode: '1',
+      univData: [],
+      correlationData: [],
+      avgCorrelation: '',
     }
   },
   watch: {
+  },
+  created(){
+    //load all needed data
+    fetch("http://localhost:3333/univ-stats")
+      .then(response => response.json())
+      .then(jsonResponse =>this.univData = jsonResponse || []);
+    fetch("http://localhost:3333/univ-correlations")
+      .then(response => response.json())
+      .then(jsonResponse =>this.correlationData = jsonResponse || []);
+    fetch("http://localhost:3333/avg-correlation")
+      .then(response => response.json())
+      .then(jsonResponse => jsonResponse ? this.avgCorrelation = +((jsonResponse[0] * 100).toFixed(2)) : this.avgCorrelation = '');
   },
   mounted() {
   },
