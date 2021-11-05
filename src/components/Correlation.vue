@@ -31,48 +31,37 @@ export default {
             "data": this.correlationData
         },
         "slice": {
-            "rows": [
-                {
-                    "uniqueName": "ЗВО"
-                }
-            ],
-            "columns": [
-                {
-                    "uniqueName": "[Measures]"
-                }
-            ],
-            "measures": [
-                {
-                    "uniqueName": "Сер. всього заяв",
-                    "aggregation": "sum"
-                },
-                {
-                    "uniqueName": "Сер. метрика",
-                    "aggregation": "average",
-                    "format": "-rvl1brc47db00"
-                },
-                {
-                    "uniqueName": "Кореляція",
-                    "aggregation": "average",
-                    "format": "-big8wut6b8n00"
-                }
-            ],
-            "sorting": {
-                "column": {
-                    "type": "desc",
-                    "tuple": [],
-                    "measure": {
-                        "uniqueName": "Сер. всього заяв",
-                        "aggregation": "sum"
-                    }
-                }
+        "rows": [
+            {
+                "uniqueName": "ЗВО",
+                "sort": "unsorted"
             },
-            "flatSort": [
-                {
-                    "uniqueName": "Сер. всього заяв",
-                    "sort": "desc"
-                }
-            ]
+            {
+                "uniqueName": "Рік"
+            }
+        ],
+        "columns": [
+            {
+                "uniqueName": "[Measures]"
+            }
+        ],
+        "measures": [
+            {
+                "uniqueName": "Всього заяв",
+                "aggregation": "average",
+                "format": "-4jj7clb0i5400"
+            },
+            {
+                "uniqueName": "Метрика",
+                "aggregation": "average",
+                "format": "-iefrlf0fvhb00"
+            },
+            {
+                "uniqueName": "Кореляція",
+                "aggregation": "average",
+                "format": "-big8wut6b8n00"
+            }
+        ]
         },
         "conditions": [
             {
@@ -97,16 +86,20 @@ export default {
             }
         ],
         "formats": [
-            {
-                "name": "-big8wut6b8n00",
-                "decimalPlaces": 2,
-                "isPercent": true
-            },
-            {
-                "name": "-rvl1brc47db00",
-                "decimalPlaces": 2
-            }
-        ]
+          {
+              "name": "-big8wut6b8n00",
+              "decimalPlaces": 2,
+              "isPercent": true
+          },
+          {
+              "name": "-4jj7clb0i5400",
+              "decimalPlaces": 0
+          },
+          {
+              "name": "-iefrlf0fvhb00",
+              "decimalPlaces": 0
+          }
+        ],
       },
     }
   },
