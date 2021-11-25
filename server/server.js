@@ -20,7 +20,7 @@ const conn = {
   }
 };
 
-let avgApplicationsNumber = 350;
+let avgApplicationsNumber = 1;
 
 const generalCorrelationQuery = (number) =>  `WITH DataAvgStd
 AS (SELECT ЗВО,

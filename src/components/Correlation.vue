@@ -7,8 +7,8 @@
   </h2>
   <Pivot
     :report="correlation"
-    :global="{localization: ukrLocale, readOnly: true}"
-    height="630px"
+    :global="{localization: ukrLocale, readOnly: false}"
+    height="830px"
     container=".pivot-container"
   ></Pivot>
 </template>
